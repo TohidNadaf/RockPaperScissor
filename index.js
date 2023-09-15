@@ -1,43 +1,56 @@
-let arr=["rock","paper","scissor"];
-let computer =arr[Math.floor(Math.random()*arr.length)]
+let playerScore = 0
+let computerScore = 0
+const buttons = document.querySelectorAll('input')
 
-let user=window.prompt("select your choice (rock,paper,scissor)");
-user=user.toLowerCase()
-let r="rock"; let s="scissor"; let p="paper";
-document.write("computer is ",computer)
-document.write("<br><br>");
+function computerPlay() {
+    let choices = ['rock', 'paper', 'scissors']
+    return choices[Math.floor(Math.random() * choices.length)]
+}
 
-document.write("user is ",user);
-document.write("<br><br>");
+function disableButtons() {
+    buttons.forEach(elem => {
+        elem.disabled = true
+    })
+}
 
-if(computer==user)
-{
-    document.write("tie");
+function playRound(playerSelection) {
+    let computerSelection = computerPlay()
+    let result = ""
+
+    if ((playerSelection == 'rock' && computerSelection == 'scissors') ||
+        (playerSelection == 'scissors' && computerSelection == 'paper') ||
+        (playerSelection == 'paper' && computerSelection == 'rock')) {
+        
+        playerScore += 1
+        result = ('You win! ' + playerSelection + ' beats ' + computerSelection
+            + "<br><br>Player score: " + playerScore + "<br>Computer score: " + computerScore)
+
+        if (playerScore == 5) {
+            result += '<br><br>You won the game! Reload the page to play again'
+            disableButtons()
+        }
+    }
+    else if (playerSelection == computerSelection) {
+        result = ('It\'s a tie. You both chose ' + playerSelection
+            + "<br><br>Player score: " + playerScore + "<br>Computer score: " + computerScore)
+    }
+    else {
+        computerScore += 1
+        result = ('You lose! ' + computerSelection + ' beats ' + playerSelection
+            + "<br><br>Player score: " + playerScore + "<br>Computer score: " + computerScore)
+
+        if (computerScore == 5) {
+            result += '<br><br>I won the game! Reload the page to play again'
+            disableButtons()
+        }
+    }
+
+    document.getElementById('result').innerHTML = result
+    return
 }
-else if(computer=="rock" && user=="paper")
-{
-    document.write("user is winner");
-}
-else if(computer=="paper" && user=="rock")
-{
-    document.write("computer is winner");
-}
-else if(computer=="scissor" && user=="paper")
-{
-    document.write("computer is winner");
-}
-else if(computer=="paper" && user=="scissor")
-{
-    document.write("user is winner");
-}
-else if(computer=="rock" && user=="scissor")
-{
-    document.write("computer is winner");
-}
-else if(computer=="scissor" && user=="rock")
-{
-    document.write("user is winner");
-}
-else {
-    document.write("invalid selection");
-}
+
+buttons.forEach(button =>{
+    button.addEventListener('click', function(){
+        playRound(button.value)
+    })
+})
